@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Tasks(props) {
   const [bg, setBg] = useState(localStorage.getItem(`bg-${props.taskNumber}`));
@@ -12,36 +12,23 @@ export default function Tasks(props) {
     localStorage.setItem(`bg-${Number}`, "red");
   }
 
-  useEffect(() => {
-    const now = new Date();
-    const nextMidnight = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + 1,
-      0,
-      0,
-      0
-    );
-    const timeUntilMidnight = nextMidnight.getTime() - now.getTime();
-
-    const timer = setTimeout(() => {
-      // console.log("It is now 12 AM!");
-      localStorage.setItem(`bg-${props.taskNumber}`, "blue");
-      // Place your function here
-    }, timeUntilMidnight);
-
-    return () => clearTimeout(timer); // This will clear the timer when the component unmounts
-  }, []);
+  function resetTasks(Number) {
+    setBg("blue");
+    localStorage.setItem(`bg-${Number}`, "blue");
+  }
 
   return (
-    <div className="task" style={{ background: bg === null ? "blue" : bg }}>
-      <div>
-        Task {props.taskNumber}. {props.taskName}
+    <>
+      <div className="task" style={{ background: bg === null ? "blue" : bg }}>
+        <div>
+          Task {props.taskNumber}. {props.taskName}
+        </div>
+        <div>
+          <button onClick={() => Done(props.taskNumber)}>✅</button>
+          <button onClick={() => NotDone(props.taskNumber)}>❌</button>
+          <button onClick={() => resetTasks(props.taskNumber)}>🔄️</button>
+        </div>
       </div>
-      <div>
-        <button onClick={() => Done(props.taskNumber)}>✅</button>
-        <button onClick={() => NotDone(props.taskNumber)}>❌</button>
-      </div>
-    </div>
+    </>
   );
 }
